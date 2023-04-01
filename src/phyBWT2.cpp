@@ -18,14 +18,13 @@
 	#define PRINT_TABLE 0
 #endif
 
-dataTypelenSeq k_min=16; //minLCP
+//Input parameters
+dataTypelenSeq k_min=16;
 double tau=1.0/2.0;
 
 dataTypeNChar n=0; //eBWT size
 
-dataTypeNChar value_f=100;
-
-dataTypelenSeq max_minLCP=0;
+#define VALUE_F 100
 
               //A B C D E F G H I J K L M N O P Q R S T U V W X Y
 int ORD[25] = {0,0,1,0,0,0,2,0,0,0,0,0,0,4,0,0,0,0,0,3,0,0,0,0,0};
@@ -36,7 +35,6 @@ char TERM = '#';
 dataTypeNSeq numData=0;
 
 vector<string> NAME;
-vector<pair<type_node,string>> to_build_newick;
 
 bool Close(dataTypeNChar ind_start, dataTypeNChar ind_fin, FILE *inCDA,FILE *inEBWT,type_node &isIn, dataTypeNChar *n_clust){
 	bool res = false;
@@ -89,7 +87,7 @@ bool Close(dataTypeNChar ind_start, dataTypeNChar ind_fin, FILE *inCDA,FILE *inE
 	return res;
 }
 
-bool RedNClose(dataTypeNChar ind_start, dataTypeNChar ind_fin, FILE *inCDA,FILE *inEBWT, vector<dataTypeNSeq> &colors,type_node &isIn, dataTypeNChar *n_clust){
+bool CloseAndReduce(dataTypeNChar ind_start, dataTypeNChar ind_fin, FILE *inCDA,FILE *inEBWT, vector<dataTypeNSeq> &colors,type_node &isIn, dataTypeNChar *n_clust){
 	bool res = false;
 	//ind_start: starting index of the eBWT positional cluster
 	//ind_fin: final index (NOT included)
@@ -145,7 +143,7 @@ bool RedNClose(dataTypeNChar ind_start, dataTypeNChar ind_fin, FILE *inCDA,FILE 
 	return res;
 }
 
-int UpdateTable(std::unordered_map<dataTypeNChar,dataTypeNChar> &votes, dataTypelenSeq w, type_node &isIn, nodes &inSet){
+int UpdateTable(std::unordered_map<bitset<SIZE_BITSET>,dataTypeNChar> &votes, dataTypelenSeq w, type_node &isIn, nodes &inSet){
 	//w is the weight to use for updating partial_sum
 	#if CK
 		fprintf(stderr,"\nUpdateTable --> isIn: ");				
@@ -184,13 +182,9 @@ int UpdateTable(std::unordered_map<dataTypeNChar,dataTypeNChar> &votes, dataType
 		fprintf(stderr,"vote -->%d\n",vote);
 	#endif
 	
-	//Increase table partial_sum
+	//Increase table
 	if(vote && (B_vect.count()<inSet.size()) && (B_vect.count()>1)) {
 		dataTypeNChar index = B_vect.to_ulong();
-		#if minLCP
-		//set max_minLCP
-		if(max_minLCP<w)	max_minLCP=w;
-		#endif
 		
 		auto search_ele = votes.find(index);
 		if(search_ele != votes.end()){
@@ -215,7 +209,7 @@ int UpdateTable(std::unordered_map<dataTypeNChar,dataTypeNChar> &votes, dataType
 }
 
 //when this is over, votes_list contains a list of entries that each vote 1, each entry is a group of elements of ele_in_set
-dataTypeNChar ClusterAnalysis(std::unordered_map<dataTypeNChar,dataTypeNChar> &votes,nodes &ele_in_set,FILE* fileInLCP,FILE *fileInCDA_2,FILE *fileInCDA,FILE *fileInEBWT, dataTypeNChar *n_clust){
+dataTypeNChar ClusterAnalysis(std::unordered_map<bitset<SIZE_BITSET>,dataTypeNChar> &votes,nodes &ele_in_set,FILE* fileInLCP,FILE *fileInCDA_2,FILE *fileInCDA,FILE *fileInEBWT, dataTypeNChar *n_clust){
 	
 	dataTypeNChar nClusters=0;
 	
@@ -366,7 +360,7 @@ dataTypeNChar ClusterAnalysis(std::unordered_map<dataTypeNChar,dataTypeNChar> &v
 								else if (bufferLCP[indexbuffer]==pred) tail_len++;
 								else { //close cluster and start a new one
 									type_node isIn;
-									if(RedNClose(pos_init,pred_index,fileInCDA,fileInEBWT,colors,isIn,n_clust)==1){	
+									if(CloseAndReduce(pos_init,pred_index,fileInCDA,fileInEBWT,colors,isIn,n_clust)==1){	
 										//Close returns 1 if the eBWT positional cluster is maximal					
 										//Update votes
 										//isIn: all colors in the cluster (not divided)
@@ -383,7 +377,7 @@ dataTypeNChar ClusterAnalysis(std::unordered_map<dataTypeNChar,dataTypeNChar> &v
 					else if (started){ //close cluster
 						type_node isIn;
 						pos_end = index_file + indexbuffer;
-						if(RedNClose(pos_init,pos_end,fileInCDA,fileInEBWT,colors,isIn,n_clust)==1){
+						if(CloseAndReduce(pos_init,pos_end,fileInCDA,fileInEBWT,colors,isIn,n_clust)==1){
 							nClusters+=UpdateTable(votes,c_weight,isIn,ele_in_set);
 						}
 						started=false;
@@ -410,7 +404,7 @@ dataTypeNChar ClusterAnalysis(std::unordered_map<dataTypeNChar,dataTypeNChar> &v
 		//Close a possibly last cluster 
 		if(started){
 			type_node isIn;
-			if(RedNClose(pos_init,index_file,fileInCDA,fileInEBWT,colors,isIn,n_clust)==1){
+			if(CloseAndReduce(pos_init,index_file,fileInCDA,fileInEBWT,colors,isIn,n_clust)==1){
 				nClusters+=UpdateTable(votes,c_weight,isIn,ele_in_set);
 			}
 		}	
@@ -424,14 +418,13 @@ dataTypeNChar ClusterAnalysis(std::unordered_map<dataTypeNChar,dataTypeNChar> &v
 	return nClusters;
 }
 
-type_node inset_to_colors(dataTypeNChar curr, nodes &in_set){
+type_node inset_to_colors(type_node &curr, nodes &in_set){
 
 	//Build the bitset set_ele corresponding to curr
-	type_node temp(curr);
 	type_node set_ele;
 	set_ele.reset();
 	for(dataTypeNSeq s=0; s<in_set.size(); s++){
-		if(temp[s]==1){
+		if(curr[s]==1){
 			//Add to set_ele in_set[s]
 			set_ele|=in_set[s];
 		}
@@ -521,15 +514,16 @@ dataTypeNChar Update_phylotree(nodes &in_set,vector<type_entry> &list_subsets,tr
 	dataTypeNChar num_it = 0;
 	dataTypeNChar num_success = 0;
 	dataTypeNChar consecutive_fail = 0;
+	dataTypeNSeq n_max=in_set.size()-1;
+	dataTypeNChar value_f = (VALUE_F>2*n_max)?2*n_max:VALUE_F;
 	double max_value = log10(list_subsets[list_subsets.size()-1].second);
 	
 	bool stop=false;
-	dataTypeNSeq n_max=in_set.size()-1;
 	#if PRINT_TABLE
 	fprintf(f_out,"PrintTable\n");
 	#endif
 	
-	while((!stop) && (consecutive_fail<value_f) && (num_success<n_max-1) && (num_it<list_subsets.size())){
+	while((!stop) && (num_it<list_subsets.size())){
 		//bit_max_ele is the maximum combination set among the remaining
 		type_node bit_max_ele = inset_to_colors(list_subsets[list_subsets.size()-1-num_it].first,in_set);
 			
@@ -575,7 +569,7 @@ dataTypeNChar Update_phylotree(nodes &in_set,vector<type_entry> &list_subsets,tr
 		
 		num_it++;
 		
-		if( max_value - log10(list_subsets[list_subsets.size()-1-num_it].second) > 2)
+		if((consecutive_fail<value_f) && (num_success<n_max-1) && (max_value - log10(list_subsets[list_subsets.size()-1-num_it].second) > 2))
 			stop=true;
 	}//end-while
 	
@@ -605,9 +599,9 @@ bool Refinement(nodes &in_set,tree<type_node>::iterator root,tree<type_node>& tr
 	dataTypeNChar n_clust_vote=ClusterAnalysis(votes,in_set,InFileLCP,InFileCDA,InFileCDA2,InFileEBWT,&n_clust); 
 	
 	fprintf(stderr,"Partition -> Number maximal positional clusters=%lu, of which voting=%lu\n",n_clust,n_clust_vote);
-	fprintf(stdout,"Partition -> Number maximal positional clusters=%lu, of which voting=%lu\n",n_clust,n_clust_vote);
-	fprintf(stdout,"Partition -> votes_list size: %lu\n", votes.size());
-	fprintf(stdout,"Time: %.6lf\n", time_stop(t_refine, c_refine));
+	//fprintf(stdout,"Partition -> Number maximal positional clusters=%lu, of which voting=%lu\n",n_clust,n_clust_vote);
+	//fprintf(stdout,"Partition -> votes_list size: %lu\n", votes.size());
+	//fprintf(stdout,"Time: %.6lf\n", time_stop(t_refine, c_refine));
 	
 	dataTypeNChar num_inserted = 0;
 	
@@ -693,8 +687,8 @@ void Print_tree_newick_form(tree<type_node>& t,tree<type_node>::iterator root, s
 		//Case leaf --> print its name
 		dataTypeNSeq i=0;
 		while(i<numData){
-			if(to_build_newick[i].first==*root){
-				str << to_build_newick[i].second;
+			if((*root)[i]){
+				str << NAME[i];
 				i=numData;
 			}
 			else
@@ -842,7 +836,6 @@ int main(int argc, char **argv) {
 		startSet.push_back(o);
 		//Initialize root children
 		phylo_tree.append_child(root, o);
-		to_build_newick.push_back(make_pair(o,NAME[i]));
 	}
 	job_list.push_back(make_pair(startSet,root));
 	
@@ -850,8 +843,6 @@ int main(int argc, char **argv) {
 	//Check phylo_tree initialization
 	kptree::print_tree_bracketed(phylo_tree, std::cout);
 	std::cout << std::endl;
-	for(dataTypeNSeq i=0; i<numData; i++)
-		cout << to_build_newick[i].first << "\t" << to_build_newick[i].second << endl;
 	#endif
 	
 	dataTypeNSeq step=0;
