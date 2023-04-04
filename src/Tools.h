@@ -29,8 +29,8 @@
 #include <bitset>         // std::bitset
 #include <deque>	  //std::deque
 //Tree.hh library
-#include "tree.hh"
-#include "tree_util.hh"
+#include "../external/tree.hh"
+#include "../external/tree_util.hh"
 
 #define ALF 6
 #define SIZE_BITSET 64
