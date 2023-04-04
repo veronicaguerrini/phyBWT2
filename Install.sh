@@ -38,7 +38,7 @@ then
 fi
 
 
-Compile phyBWT
+#Compile phyBWT
 make clean 
 if [ $SHORT -eq 1 ]
 then
