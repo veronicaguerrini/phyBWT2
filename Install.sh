@@ -38,16 +38,16 @@ then
 fi
 
 
-#Compile phyBWT
-# make clean 
-# if [ $SHORT -eq 1 ]
-# then
-	# echo -e "\n****Compiling phyBWT...\n"
-	# make
-# else
-	# echo -e "\n****Compiling phyBWT SHORT=0...\n"
-	# make SHORT=0
-# fi
+Compile phyBWT
+make clean 
+if [ $SHORT -eq 1 ]
+then
+	echo -e "\n****Compiling phyBWT...\n"
+	make
+else
+	echo -e "\n****Compiling phyBWT SHORT=0...\n"
+	make SHORT=0
+fi
 
-# echo -e "\nDone."
+echo -e "\nDone."
 
