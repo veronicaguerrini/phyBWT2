@@ -598,9 +598,9 @@ bool Refinement(nodes &in_set,tree<type_node>::iterator root,tree<type_node>& tr
  
 	dataTypeNChar n_clust_vote=ClusterAnalysis(votes,in_set,InFileLCP,InFileCDA,InFileCDA2,InFileEBWT,&n_clust); 
 	
-	fprintf(stderr,"Partition -> Number maximal positional clusters=%lu, of which voting=%lu\n",n_clust,n_clust_vote);
-	//fprintf(stdout,"Partition -> Number maximal positional clusters=%lu, of which voting=%lu\n",n_clust,n_clust_vote);
-	//fprintf(stdout,"Partition -> votes_list size: %lu\n", votes.size());
+	fprintf(stderr,"Refinement -> Number maximal positional clusters=%lu, of which voting=%lu\n",n_clust,n_clust_vote);
+	//fprintf(stdout,"Refinement -> Number maximal positional clusters=%lu, of which voting=%lu\n",n_clust,n_clust_vote);
+	//fprintf(stdout,"Refinement -> votes_list size: %lu\n", votes.size());
 	//fprintf(stdout,"Time: %.6lf\n", time_stop(t_refine, c_refine));
 	
 	dataTypeNChar num_inserted = 0;
@@ -623,8 +623,8 @@ bool Refinement(nodes &in_set,tree<type_node>::iterator root,tree<type_node>& tr
 		// Sort using cmp_function
 		sort(table.begin(), table.end(), cmp_function);
 
-		fprintf(stdout,"Partition -> table size: %lu\n", table.size());
-		fprintf(stdout,"Time: %.6lf\n", time_stop(t_total, c_total));
+		//fprintf(stdout,"Refinement -> table size: %lu\n", table.size());
+		//fprintf(stdout,"Time: %.6lf\n", time_stop(t_total, c_total));
 		
 		//Take the top combination sets to update the subtree of phylotree rooted at root	
 		#if PRINT_TABLE
@@ -638,7 +638,7 @@ bool Refinement(nodes &in_set,tree<type_node>::iterator root,tree<type_node>& tr
 	}
 	
 	#if CK_2
-	fprintf(stderr,"END Partition --> num_inserted=%lu\n",num_inserted);
+	fprintf(stderr,"END Refinement --> num_inserted=%lu\n",num_inserted);
 	#endif
 	
 	return (num_inserted>0);
