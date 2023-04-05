@@ -83,7 +83,7 @@ By setting SHORT=0 in Preprocessing.sh and compiling phyBWT2 with parameter SHOR
 and phyBWT2 can be run by using
 
 ```sh
-./phyBWT HIV-1_data.fasta HIV-1_data.txt Tree_HIV-1_data.new 16 0.6
+./phyBWT2 HIV-1_data.fasta HIV-1_data.txt Tree_HIV-1_data.new 16 0.6
 ```
 
 ## References
