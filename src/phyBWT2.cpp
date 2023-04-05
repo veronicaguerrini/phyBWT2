@@ -862,11 +862,12 @@ int main(int argc, char **argv) {
 		#else
         if(Refinement(P.first,P.second,phylo_tree,InLCP,InCDA,InCDA_2,InEBWT))
         #endif
+		{
 			//Load new jobs
 			Update_job_list(job_list,P.second,phylo_tree,P.first);
-		//Otherwise nothing else is done -> that portion of the tree remains as it is
-			
-		step++;
+			//Otherwise nothing else is done -> that portion of the tree remains as it is
+			step++;
+		}
 	}
 	
 	cout << "Tree reconstruction in " << (int)step << " steps." << endl;
