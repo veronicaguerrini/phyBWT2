@@ -73,6 +73,19 @@ Our alignment-, assembly-, and reference-free method can be run by using:
 ```
 where fastaName is the base name of files fastaName.ebwt, fastaName.lcp and fastaName.cda, while fileInfo is a tab-separated file that stores per line the number of sequences of each *S<sub>i</sub>* of the collection *S*.
 
+### Quick test
+
+By setting SHORT=0 in Preprocessing.sh and compiling phyBWT2 with parameter SHORT=0, the input datastructures can be built by
+
+```sh
+./Preprocessing.sh ./example/hiv_sequences/ HIV-1_data
+```
+and phyBWT2 can be run by using
+
+```sh
+./phyBWT HIV-1_data.fasta HIV-1_data.txt Tree_HIV-1_data.new 16 0.6
+```
+
 ## References
 
 Guerrini V., Conte A., Grossi R., Liti G., Rosone G., Tattini L., phyBWT2: phylogeny reconstruction via eBWT Positional Clustering. *Submitted paper*.
