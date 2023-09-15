@@ -88,5 +88,5 @@ and phyBWT2 can be run by using
 
 ## References
 
-Guerrini V., Conte A., Grossi R., Liti G., Rosone G., Tattini L., phyBWT2: phylogeny reconstruction via eBWT positional clustering. Algorithms Mol Biol 18, 11 (2023). doi.org/10.1186/s13015-023-00232-4[https://doi.org/10.1186/s13015-023-00232-4]
+Guerrini V., Conte A., Grossi R., Liti G., Rosone G., Tattini L., phyBWT2: phylogeny reconstruction via eBWT positional clustering. Algorithms Mol Biol 18, 11 (2023). doi: [10.1186/s13015-023-00232-4](https://doi.org/10.1186/s13015-023-00232-4)
 
