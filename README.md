@@ -88,4 +88,10 @@ and phyBWT2 can be run by using
 
 ## References
 
-Guerrini V., Conte A., Grossi R., Liti G., Rosone G., Tattini L., phyBWT2: phylogeny reconstruction via eBWT Positional Clustering. *Submitted paper*.
+Guerrini V., Conte A., Grossi R., Liti G., Rosone G., Tattini L., phyBWT: Alignment-Free Phylogeny via eBWT Positional Clustering. In *Proceedings of the 22nd International Workshop on Algorithms in Bioinformatics* WABI 2022. LIPIcs, vol 242, pp 23:1--23:19. doi: [10.4230/LIPIcs.WABI.2022.23](https://doi.org/10.4230/LIPIcs.WABI.2022.23)
+
+Guerrini V., Conte A., Grossi R., Liti G., Rosone G., Tattini L., phyBWT2: phylogeny reconstruction via eBWT positional clustering. (2023) Algorithms Mol Biol 18, 11. doi: [10.1186/s13015-023-00232-4](https://doi.org/10.1186/s13015-023-00232-4)
+
+--
+
+<small> Supported by PNRR project “THE—Tuscany Health Ecosystem” — Spoke 6 “Precision medicine & personalized healthcare”, funded by the European Commission under the NextGeneration EU programme.
