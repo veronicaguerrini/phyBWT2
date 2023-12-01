@@ -184,12 +184,11 @@ int UpdateTable(std::unordered_map<bitset<SIZE_BITSET>,dataTypeNChar> &votes, da
 	
 	//Increase table
 	if(vote && (B_vect.count()<inSet.size()) && (B_vect.count()>1)) {
-		dataTypeNChar index = B_vect.to_ulong();
-		
-		auto search_ele = votes.find(index);
+
+		auto search_ele = votes.find(B_vect);
 		if(search_ele != votes.end()){
 			#if CK
-			fprintf(stderr,"Update votes for index = %lu --> search_ele->first: %lu, search_ele-> second: %lu\n",index,search_ele->first,search_ele->second);				
+			fprintf(stderr,"Update votes for index = %lu --> search_ele->first: %lu, search_ele-> second: %lu\n",B_vect.to_ulong(),search_ele->first,search_ele->second);				
 			#endif
 			search_ele->second = search_ele->second + w;
 			#if CK
@@ -197,9 +196,9 @@ int UpdateTable(std::unordered_map<bitset<SIZE_BITSET>,dataTypeNChar> &votes, da
 			#endif
 		}
 		else{
-			votes.insert({index,w});
+			votes.insert({B_vect,w});
 			#if CK
-			fprintf(stderr,"New entry votes for index = %lu --> votes[index]: %lu\n",index,votes[index]);				
+			fprintf(stderr,"New entry votes for index = %lu --> votes[index]: %lu\n",B_vect.to_ulong(),votes[B_vect.to_ulong()]);				
 			#endif
 		}
 		return 1;
@@ -573,7 +572,7 @@ dataTypeNChar Update_phylotree(nodes &in_set,vector<type_entry> &list_subsets,tr
 			stop=true;
 	}//end-while
 	
-	fprintf(stderr,"END Update_phylotree --> N. iterations = %lu, N. Success = %u\n",num_it,num_success);
+	fprintf(stderr,"END Update_phylotree --> N. examined subsets = %lu, N. successful insertions = %u\n",num_it,num_success);
 	
 	return num_success;
 }
