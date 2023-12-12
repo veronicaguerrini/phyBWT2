@@ -38,8 +38,10 @@
 
 #if SHORT
 	#define MAX_LCP 255
+	#define TERM '$'
 #else
 	#define MAX_LCP 4294967295
+	#define TERM '#'
 #endif
 
 

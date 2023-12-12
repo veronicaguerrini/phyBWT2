@@ -30,9 +30,8 @@ then
 	echo -e "\n****Dowloading BCR...\n"
 	git clone https://github.com/giovannarosone/BCR\_LCP\_GSA
 	cd BCR\_LCP\_GSA
-	cp ./../../BCR_Parameters.h Parameters.h
 	echo -e "\n****Compiling BCR...\n"
-	make
+	make LCP=1 DA=1
 	
 	cd ../..
 fi

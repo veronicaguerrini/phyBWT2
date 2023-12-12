@@ -30,7 +30,7 @@ dataTypeNChar n=0; //eBWT size
 int ORD[25] = {0,0,1,0,0,0,2,0,0,0,0,0,0,4,0,0,0,0,0,3,0,0,0,0,0};
 #define ord(c) (ORD[c-65])
 //terminator character at the end of the reads
-char TERM = '#';
+//char TERM = '#';
 
 dataTypeNSeq numData=0;
 
