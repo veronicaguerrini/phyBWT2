@@ -24,7 +24,6 @@
 #include <sys/stat.h>
 #include <math.h>
 #include <numeric>
-#include <malloc.h>
 #include <time.h>
 #include <bitset>         // std::bitset
 #include <deque>	  //std::deque
